@@ -1,8 +1,9 @@
-import streamlit as st
+import os
 import random
 import time
-import matplotlib.pyplot as plt
 import platform
+import streamlit as st
+import matplotlib.pyplot as plt
 
 # ------------------- 한글 폰트 설정 -------------------
 def setup_custom_font():
