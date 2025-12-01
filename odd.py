@@ -6,14 +6,19 @@ import platform
 import koreanize_matplotlib
 
 # ------------------- 한글 폰트 설정 -------------------
-system_name = platform.system()
-if system_name == 'Windows':
-    plt.rc('font', family='Malgun Gothic')
-elif system_name == 'Darwin':
-    plt.rc('font', family='AppleGothic')
-else:
+def setup_custom_font():
+    font_file = 'NanumGothic.ttf'
+    url = 'https://github.com/google/fonts/raw/main/ofl/nanumgothic/NanumGothic-Regular.ttf'
+    
+    if not os.path.exists(font_file):
+        import urllib.request
+        urllib.request.urlretrieve(url, font_file)
+        
+    fm.fontManager.addfont(font_file)
     plt.rc('font', family='NanumGothic')
-plt.rc('axes', unicode_minus=False)
+    plt.rc('axes', unicode_minus=False)
+
+setup_custom_font()
 # -----------------------------------------------------
 
 # 페이지 설정
