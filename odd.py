@@ -165,24 +165,35 @@ def selection_sort(arr):
 def insertion_sort_standard(arr):
     comparisons = 0
     swaps = 0
+    
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
+        
         while j >= 0:
             comparisons += 1
-            plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], title=f"일반 삽입: {arr[j]} vs {key} 비교"))
-            update_status(comparisons, swaps, f"뒤({j})에서부터 비교 중")
+            plot_placeholder.pyplot(plot_bar(arr, [j, j+1], title=f"일반 삽입: {arr[j]} vs {key} 비교"))
+            update_status(comparisons, swaps, f"현재 값({arr[j]})과 타겟({key}) 비교 중")
             time.sleep(speed)
+            
             if arr[j] > key:
+                # 밀어내기(Shift) 동작
                 arr[j + 1] = arr[j]
                 swaps += 1
-                arr[j] = key
-                plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], 'orange', title="밀어내기 (Shift)"))
+                arr[j] = key 
+                plot_placeholder.pyplot(plot_bar(arr, [j, j+1], 'orange', title="밀어내기 (Shift)"))
+                update_status(comparisons, swaps, f"{arr[j]} > {key} 이므로 오른쪽으로 밀어냄 (Shift)")
+                
                 j -= 1
+                time.sleep(speed) # 시각적 인지를 위해 딜레이 추가
             else:
                 break
+        # 삽입 동작
         arr[j + 1] = key
-        plot_placeholder.pyplot(plot_bar(arr, [j + 1], 'green', title=f"{key} 삽입 완료"))
+        plot_placeholder.pyplot(plot_bar(arr, [j+1], 'green', title=f"{key} 삽입 완료"))
+        update_status(comparisons, swaps, f"{key} 자리에 삽입 완료")
+        time.sleep(speed)
+        
     return comparisons, swaps
 
 
