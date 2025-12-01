@@ -4,6 +4,7 @@ import time
 import platform
 import streamlit as st
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 
 # ------------------- 한글 폰트 설정 -------------------
 def setup_custom_font():
