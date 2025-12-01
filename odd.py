@@ -3,6 +3,7 @@ import random
 import time
 import matplotlib.pyplot as plt
 import platform
+import koreanize_matplotlib
 
 # ------------------- 한글 폰트 설정 -------------------
 system_name = platform.system()
