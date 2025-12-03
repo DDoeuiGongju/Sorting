@@ -164,7 +164,7 @@ def bubble_sort(arr):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
                 swaps += 1
-                plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], highlight_color='#ffb74d', title="위치 교환 (Swap)",
+                plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], highlight_color='#ffb74d', title="위치 교환",
                                                  sorted_indices=sorted_idxs))
                 update_status(comparisons, swaps, f"{arr[j + 1]} ↔ {arr[j]} 자리 교환")
                 time.sleep(speed)
@@ -228,7 +228,7 @@ def insertion_sort_standard(arr):
                 arr[j-1], arr[j] = arr[j], arr[j-1]
                 swaps += 1
 
-                plot_placeholder.pyplot(plot_bar(arr, [j-1, j], highlight_color='#ffb74d', title="위치 교환 (Swap)",
+                plot_placeholder.pyplot(plot_bar(arr, [j-1, j], highlight_color='#ffb74d', title="위치 교환",
                                                  sorted_indices=sorted_idxs))
                 update_status(comparisons, swaps, f"{arr[j]}가 더 작으므로 앞으로 교환")
                 j -= 1
@@ -275,7 +275,7 @@ def insertion_sort_textbook(arr):
                 swaps += 1
                 
                 plot_placeholder.pyplot(
-                    plot_bar(arr, [k-1, k], highlight_color='#ffb74d', title=f"값 교환: {arr[k-1]} ↔ {arr[k]}",
+                    plot_bar(arr, [k-1, k], highlight_color='#ffb74d', title=f"위치 교환",
                              sorted_indices=sorted_idxs))
                 update_status(comparisons, swaps, f"{arr[k-1]}을(를) 앞으로 보내기 위해 교환")
                 time.sleep(speed)
