@@ -254,62 +254,58 @@ def insertion_sort_textbook(arr):
     for i in range(1, len(arr)):
         key = arr[i] 
         insert_pos = i 
-        sorted_idxs = list(range(0, i)) # 이미 정렬된 앞부분
+        sorted_idxs = list(range(0, i)) 
         
-        # [1단계] 탐색: 앞에서부터 자리를 찾음 (이동 없음)
+        # 1. 탐색
         for j in range(i):
             comparisons += 1
             plot_placeholder.pyplot(
                 plot_bar(arr, [j, i], highlight_color='#ff5252', 
-                         title=f"[탐색] Key({key})가 들어갈 자리 찾는 중... ({arr[j]} vs {key})", 
+                         title=f"위치 탐색: {arr[j]} vs {key}", 
                          sorted_indices=sorted_idxs)
             )
-            update_status(comparisons, swaps, f"앞쪽({j}번)부터 어디에 넣을지 확인 중")
+            update_status(comparisons, swaps, f"{arr[j]}와(과) {key} 비교 중")
             time.sleep(speed)
             
             if arr[j] > key:
                 insert_pos = j
                 break 
         
-        # [2단계] 이동: 자리를 만들기 위해 한 칸씩 오른쪽으로 복사(덮어쓰기)
+        # 2. 이동 (심플하게 수정됨)
         if insert_pos != i:
-            # 시각적 효과: 이동 시작 전, Key 값을 기억하라고 강조
-            update_status(comparisons, swaps, f"Key({key})를 {insert_pos}번 자리에 넣기 위해 공간 확보 시작")
-            
             for k in range(i-1, insert_pos-1, -1):
-                arr[k+1] = arr[k] # 값 복사
+                arr[k+1] = arr[k] 
                 swaps += 1
                 
-                # 막대가 복제되는 현상을 명확히 설명
+                # "공간 확보" 같은 말 제거 -> "값 이동"으로 통일
                 plot_placeholder.pyplot(
                     plot_bar(arr, [k, k+1], highlight_color='#ffb74d', 
-                             title=f"[공간 확보] {arr[k]} ➡ 오른쪽({k+1}번)으로 복사 (Key: {key})", 
+                             title=f"값 이동", 
                              sorted_indices=sorted_idxs)
                 )
-                update_status(comparisons, swaps, f"{arr[k]} 값을 오른쪽으로 한 칸 밀어냄 (복사)")
+                update_status(comparisons, swaps, f"{arr[k]}을(를) 오른쪽으로 이동")
                 time.sleep(speed)
             
-            # [3단계] 삽입: 확보된 자리에 Key 넣기
+            # 3. 삽입
             arr[insert_pos] = key
             sorted_idxs = list(range(0, i+1))
             
             plot_placeholder.pyplot(
                 plot_bar(arr, [insert_pos], highlight_color='#4caf50', 
-                         title=f"[삽입] 빈 자리({insert_pos}번)에 Key({key}) 삽입 완료!", 
+                         title=f"{key} 삽입 완료", 
                          sorted_indices=sorted_idxs)
             )
-            update_status(comparisons, swaps, f"{insert_pos}번 위치에 {key} 삽입 완료")
+            update_status(comparisons, swaps, f"{key} 삽입 완료")
             time.sleep(speed)
             
         else:
-            # 제자리인 경우
             sorted_idxs = list(range(0, i+1))
             plot_placeholder.pyplot(
                 plot_bar(arr, [i], highlight_color='#4caf50', 
-                         title=f"[완료] {key}은(는) 이미 제자리임", 
+                         title=f"{key} 제자리 (이동 없음)", 
                          sorted_indices=sorted_idxs)
             )
-            update_status(comparisons, swaps, "이동할 필요 없음 (이미 정렬된 위치)")
+            update_status(comparisons, swaps, "이동 없음")
             time.sleep(speed)
             
     return comparisons, swaps
