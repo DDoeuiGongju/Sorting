@@ -41,7 +41,7 @@ st.markdown("교과서 예제 값을 직접 입력하거나 랜덤 데이터로 
 st.sidebar.header("설정")
 algo_option = st.sidebar.selectbox(
     "알고리즘 선택",
-    ("버블 정렬 (Bubble Sort)", "선택 정렬 (Selection Sort)", "삽입 정렬: 일반 (뒤에서 비교&이동)", "삽입 정렬: 교과서 (앞에서 탐색 후 밀기)")
+    ("버블 정렬 (Bubble Sort)", "선택 정렬 (Selection Sort)", "삽입 정렬: 일반 (뒤에서 비교&이동)", "삽입 정렬: 교과서 (앞에서 탐색 후 이동)")
 )
 
 speed = st.sidebar.slider("애니메이션 속도 (초)", 0.01, 1.0, 0.3)
@@ -89,7 +89,7 @@ def plot_bar(arr, highlight_indices=[], highlight_color='#ff5252', title="", sor
     # 1. 기본 색상 (하늘색)
     colors = ['#b3e5fc'] * len(arr)
 
-    # 2. 정렬 완료된 구역 색상 (노란색) - 선생님 요청 사항
+    # 2. 정렬 완료된 구역 색상 (노란색)
     for idx in sorted_indices:
         if idx < len(arr):
             colors[idx] = '#fff9c4'  # 연한 노란색
@@ -125,7 +125,7 @@ def update_status(comparisons, swaps, current_action):
         <div class="metric-card">
             <h3>📊 현재 상태</h3>
             <p style='margin: 5px 0;'><strong>비교 횟수:</strong> {comparisons}회</p>
-            <p style='margin: 5px 0;'><strong>교환(이동) 횟수:</strong> {swaps}회</p>
+            <p style='margin: 5px 0;'><strong>교환 및 이동 횟수:</strong> {swaps}회</p>
             <hr style='margin: 10px 0;'>
             <p style='color: #333; font-weight: bold;'>{current_action}</p>
         </div>
@@ -137,7 +137,7 @@ def update_status(comparisons, swaps, current_action):
             <span style="color: #b3e5fc;">■</span> 미정렬 
             <span style="color: #fff9c4;">■</span> 정렬완료 
             <span style="color: #ff5252;">■</span> 비교 
-            <span style="color: #ffb74d;">■</span> 이동
+            <span style="color: #ffb74d;">■</span> 교환/이동
         </div>
         """, unsafe_allow_html=True)
 
@@ -148,12 +148,11 @@ def bubble_sort(arr):
     n = len(arr)
     comparisons = 0
     swaps = 0
-    sorted_idxs = []  # 정렬 완료된 인덱스 저장용
+    sorted_idxs = []
 
     for i in range(n):
         for j in range(0, n - i - 1):
             comparisons += 1
-            # 정렬된 부분(뒤쪽)을 sorted_indices로 넘김
             sorted_idxs = list(range(n - i, n))
 
             plot_placeholder.pyplot(
@@ -167,10 +166,9 @@ def bubble_sort(arr):
                 swaps += 1
                 plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], highlight_color='#ffb74d', title="위치 교환 (Swap)",
                                                  sorted_indices=sorted_idxs))
-                update_status(comparisons, swaps, f"{arr[j + 1]} ↔ {arr[j]} 자리 바꿈")
+                update_status(comparisons, swaps, f"{arr[j + 1]} ↔ {arr[j]} 자리 교환")
                 time.sleep(speed)
 
-        # 회전 종료 시 맨 뒤 하나는 확실히 정렬됨
         sorted_idxs = list(range(n - i - 1, n))
 
     return comparisons, swaps
@@ -184,7 +182,7 @@ def selection_sort(arr):
 
     for i in range(n):
         min_idx = i
-        sorted_idxs = list(range(0, i))  # 앞쪽 i개는 정렬 완료됨
+        sorted_idxs = list(range(0, i))
 
         for j in range(i + 1, n):
             comparisons += 1
@@ -200,9 +198,9 @@ def selection_sort(arr):
         if min_idx != i:
             arr[i], arr[min_idx] = arr[min_idx], arr[i]
             swaps += 1
-            plot_placeholder.pyplot(plot_bar(arr, [i, min_idx], highlight_color='#ffb74d', title="최솟값 배치 (Swap)",
+            plot_placeholder.pyplot(plot_bar(arr, [i, min_idx], highlight_color='#ffb74d', title="최솟값 배치 (교환)",
                                              sorted_indices=sorted_idxs))
-            update_status(comparisons, swaps, f"찾은 최솟값 {arr[i]}을(를) {i}번 인덱스로 이동")
+            update_status(comparisons, swaps, f"찾은 최솟값 {arr[i]}을(를) {i}번 인덱스로 교환(이동)")
             time.sleep(speed)
 
     return comparisons, swaps
@@ -215,7 +213,6 @@ def insertion_sort_standard(arr):
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
-        # 삽입 정렬에서 0~i-1은 '현재까지 정렬된 부분'
         sorted_idxs = list(range(0, i))
 
         while j >= 0:
@@ -227,20 +224,20 @@ def insertion_sort_standard(arr):
             time.sleep(speed)
 
             if arr[j] > key:
-                arr[j + 1] = arr[j]  # Shift
+                arr[j + 1] = arr[j]  # Move
                 swaps += 1
-                arr[j] = key  # 시각화용 임시 배치
+                arr[j] = key 
 
-                plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], highlight_color='#ffb74d', title="밀어내기 (Shift)",
+                # 용어 수정: 밀어내기 -> 값 이동 / 자리 만들기
+                plot_placeholder.pyplot(plot_bar(arr, [j, j + 1], highlight_color='#ffb74d', title="값 이동",
                                                  sorted_indices=sorted_idxs))
-                update_status(comparisons, swaps, f"{arr[j]} > {key} 이므로 오른쪽으로 밀어냄")
+                update_status(comparisons, swaps, f"{arr[j]} > {key} 이므로 오른쪽으로 한 칸 이동")
                 j -= 1
                 time.sleep(speed)
             else:
                 break
 
         arr[j + 1] = key
-        # i번째까지 정렬 범위 확장
         sorted_idxs = list(range(0, i + 1))
         plot_placeholder.pyplot(
             plot_bar(arr, [j + 1], highlight_color='#4caf50', title=f"{key} 삽입 완료", sorted_indices=sorted_idxs))
@@ -257,29 +254,30 @@ def insertion_sort_textbook(arr):
     for i in range(1, len(arr)):
         key = arr[i]
         insert_pos = i
-        sorted_idxs = list(range(0, i))  # 정렬된 범위
+        sorted_idxs = list(range(0, i)) 
 
         # 1. 탐색
         for j in range(i):
             comparisons += 1
             plot_placeholder.pyplot(plot_bar(arr, [j, i], highlight_color='#ff5252', title=f"위치 탐색: {arr[j]} vs {key}",
                                              sorted_indices=sorted_idxs))
-            update_status(comparisons, swaps, f"앞({j})에서부터 들어갈 위치 찾기 위해 비교 중")
+            update_status(comparisons, swaps, f"앞({j})에서부터 들어갈 위치 확인 중")
             time.sleep(speed)
 
             if arr[j] > key:
                 insert_pos = j
                 break
 
-                # 2. 이동 (Shift)
+        # 2. 이동 (Move)
         if insert_pos != i:
             for k in range(i - 1, insert_pos - 1, -1):
                 arr[k + 1] = arr[k]
                 swaps += 1
+                # 용어 수정: 밀어내기 -> 이동
                 plot_placeholder.pyplot(
-                    plot_bar(arr, [k, k + 1], highlight_color='#ffb74d', title=f"공간 확보: {arr[k]} → 이동",
+                    plot_bar(arr, [k, k + 1], highlight_color='#ffb74d', title=f"{arr[k]} 이동",
                              sorted_indices=sorted_idxs))
-                update_status(comparisons, swaps, "빈 공간을 만들기 위해 밀어내는 중 (Shift)")
+                update_status(comparisons, swaps, "삽입할 공간을 만들기 위해 값을 이동 중")
                 time.sleep(speed)
 
             arr[insert_pos] = key
@@ -289,7 +287,6 @@ def insertion_sort_textbook(arr):
             update_status(comparisons, swaps, f"{insert_pos}번 위치에 {key} 삽입 완료")
             time.sleep(speed)
         else:
-            # 제자리인 경우
             sorted_idxs = list(range(0, i + 1))
             plot_placeholder.pyplot(
                 plot_bar(arr, [i], highlight_color='#4caf50', title=f"{key} 제자리 유지", sorted_indices=sorted_idxs))
@@ -310,11 +307,10 @@ if st.button("정렬 시작 ▶️"):
         c, s = selection_sort(data_copy)
     elif algo_option == "삽입 정렬: 일반 (뒤에서 비교&이동)":
         c, s = insertion_sort_standard(data_copy)
-    elif algo_option == "삽입 정렬: 교과서 (앞에서 탐색 후 밀기)":
+    elif algo_option == "삽입 정렬: 교과서 (앞에서 탐색 후 이동)":
         c, s = insertion_sort_textbook(data_copy)
 
     st.success(f"정렬 완료! 총 비교: {c}회, 교환/이동: {s}회")
-    # 최종 완료 시 전체 노란색 처리
     plot_placeholder.pyplot(plot_bar(data_copy, [], title="최종 정렬 완료", sorted_indices=range(len(data_copy))))
 
 # 초기 데이터 표시
