@@ -279,7 +279,7 @@ def insertion_sort_textbook(arr):
                 
                 # "공간 확보" 같은 말 제거 -> "값 이동"으로 통일
                 plot_placeholder.pyplot(
-                    plot_bar(arr, [k, k+1], highlight_color='#ffb74d', 
+                    plot_bar(arr, [k-1, k], highlight_color='#ffb74d', 
                              title=f"값 이동", 
                              sorted_indices=sorted_idxs)
                 )
